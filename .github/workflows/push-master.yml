@@ -1,0 +1,35 @@
+name: push-master.yml
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  push_master:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 코드 체크아웃
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      # SSH 연결
+      - name: Set up SSH
+        uses: appleboy/ssh-action@v1
+        env:
+          DOCKER_REGISTRY_ACCESS_TOKEN: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+          DOCKER_REGISTRY_USERNAME: ${{ github.repository_owner }}
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo $DOCKER_REGISTRY_ACCESS_TOKEN | docker login ghcr.io -u $DOCKER_REGISTRY_USERNAME --password-stdin
+            docker ps -q --filter "name=backend-proxy-server" | xargs -r docker stop
+            docker ps -a -q --filter "name=backend-proxy-server" | xargs -r docker rm
+            docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
+            docker pull ghcr.io/$$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
+            docker run -d \
+              --name backend-proxy-server \
+              -p 80:80 -p 443:443 \
+              ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
