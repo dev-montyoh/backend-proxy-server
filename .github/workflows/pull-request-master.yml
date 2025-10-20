@@ -1,0 +1,34 @@
+name: Pull Request Workflow (master)
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  pull_request_master:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 코드 체크아웃
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      # Github Registry 로그인
+      - name: Log in to Github Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+
+      # Docker Image Build
+      - name: Build Docker Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/backend-proxy-server:latest \
+          -t ghcr.io/${{ github.repository_owner }}/backend-proxy-server:${{ github.run_number }} .
+
+      # Docker Push
+      - name: Deploy proxy server
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/backend-api-server-${{ inputs.target }}:latest
+          docker push ghcr.io/${{ github.repository_owner }}/backend-api-server-${{ inputs.target }}:${{ github.run_number }}
