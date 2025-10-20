@@ -1,4 +1,4 @@
-name: Pull Request Workflow (master)
+name: pull-request-master.yml
 on:
   pull_request:
     branches:
