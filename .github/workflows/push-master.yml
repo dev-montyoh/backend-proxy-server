@@ -30,7 +30,10 @@ jobs:
             docker ps -a -q --filter "name=backend-proxy-server" | xargs -r docker rm
             docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
             docker pull ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
+            
+            docker network create -d bridge proxy-net || true
             docker run -d \
               --name backend-proxy-server \
+              --network proxy-net
               -p 80:80 -p 443:443 \
               ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
