@@ -25,15 +25,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           envs: DOCKER_REGISTRY_ACCESS_TOKEN,DOCKER_REGISTRY_USERNAME
           script: |
-            echo $DOCKER_REGISTRY_ACCESS_TOKEN | docker login ghcr.io -u $DOCKER_REGISTRY_USERNAME --password-stdin
+            # 기존 서비스 및 이미지 삭제
             docker ps -q --filter "name=backend-proxy-server" | xargs -r docker stop
             docker ps -a -q --filter "name=backend-proxy-server" | xargs -r docker rm
             docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
-            docker pull ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
             
-            docker network create -d bridge proxy-net || true
-            docker run -d \
-              --name backend-proxy-server \
-              --network proxy-net
-              -p 80:80 -p 443:443 \
-              ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest
+            # docker-compose.yml 연결 및 특정 서비스 시작
+            cd /home/ec2-user/app
+            curl -L -o docker-compose.yml https://raw.githubusercontent.com/dev-montyoh/iac-terraform/refs/heads/master/docker-compose.yml
+            docker-compose pull backend-proxy-server
+            docker-compose up -d backend-proxy-server
