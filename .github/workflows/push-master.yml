@@ -31,6 +31,7 @@ jobs:
             docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
             
             # docker-compose.yml 연결 및 특정 서비스 시작
+            echo "$DOCKER_REGISTRY_ACCESS_TOKEN" | docker login ghcr.io -u dev-montyoh --password-stdin
             cd /home/ec2-user/app
             curl -L -o docker-compose.yml https://raw.githubusercontent.com/dev-montyoh/iac-terraform/refs/heads/master/docker-compose.yml
             docker-compose pull backend-proxy-server
