@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: 'dev-montyoh/secrets-store'
-          token: ${{ inputs.SECRETS_STORE_ACCESS_TOKEN }}
+          token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
           path: secrets-store
 
       - name: Load secrets
