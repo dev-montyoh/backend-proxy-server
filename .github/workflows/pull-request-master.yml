@@ -5,11 +5,6 @@ on:
       - master
 
 jobs:
-  load-secrets-job:
-    uses: dev-montyoh/secrets-store/.github/workflows/load-secrets.yml@master
-    secrets:
-      SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
-
   pull_request_master:
     runs-on: ubuntu-latest
 
@@ -17,6 +12,11 @@ jobs:
       # 코드 체크아웃
       - name: Check out repository
         uses: actions/checkout@v5
+
+      - name: Load secrets
+        uses: dev-montyoh/secrets-store/.github/actions/load-secrets
+        with:
+          SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
 
       # Secret Store
 #      - name: Load secret Store
