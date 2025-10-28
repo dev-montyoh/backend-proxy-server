@@ -13,27 +13,19 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
-#      # 시크릿 스토어 체크아웃
-#      - name: Check out Secrets store
-#        uses: actions/checkout@v5
-#        with:
-#          repository: 'dev-montyoh/secrets-store'
-#          token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
-#          path: secrets-store
-#
-#      # 시크릿 값들 로드
-#      - name: Load secrets
-#        run: |
-#          echo "Loading shared secrets..."
-#          grep -v '^#' secrets-store/github.properties >> $GITHUB_ENV
-#          echo "Secrets loaded!"
-
-      # 시크릿 값 로드
-      - name: Load Secrets
-        uses: dev-montyoh/secrets-store/.github/actions/load-secrets@master
+      # 시크릿 스토어 체크아웃
+      - name: Check out Secrets store
+        uses: actions/checkout@v5
         with:
-          SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
-          PROJECT_NAME: backend-proxy-server
+          repository: 'dev-montyoh/secrets-store'
+          token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
+          path: secrets-store
+
+      # 시크릿 값들 로드
+      - name: Load secrets
+        run: |
+          grep -v '^#' secrets-store/${{github.repository}}/github.properties >> $GITHUB_ENV
+          echo "Secrets loaded"
 
       # Github Registry 로그인
       - name: Log in to Github Registry
