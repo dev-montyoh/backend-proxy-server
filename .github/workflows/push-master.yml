@@ -1,9 +1,5 @@
 name: push-master.yml
 on:
-#  임시 테스트
-  pull_request:
-    branches:
-      - master
   push:
     branches:
       - master
