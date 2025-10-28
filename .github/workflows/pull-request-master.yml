@@ -13,6 +13,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
+      # 외부 private secrets store 접근
       - name: Check out Secrets store
         uses: actions/checkout@v5
         with:
@@ -20,16 +21,11 @@ jobs:
           token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
           path: secrets-store
 
+      # 외부 private secrets store 로드
       - name: Load secrets
         uses: ./secrets-store/.github/actions/load-secrets
         with:
           SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
-
-      # Secret Store
-#      - name: Load secret Store
-#        uses: ./.github/actions/secrets-store
-#        with:
-#          SECRETS_STORE_ACCESS_TOKEN: ${{secrets.SECRETS_STORE_ACCESS_TOKEN}}
 
       # Github Registry 로그인
       - name: Log in to Github Registry
