@@ -28,7 +28,8 @@ jobs:
       # 시크릿 값들 로드
       - name: Load secrets
         run: |
-          grep -v '^#' secrets-store/${{github.repository}}/github.properties >> $GITHUB_ENV
+          grep -v '^#' secrets-store/github.properties >> $GITHUB_ENV
+          grep -v '^#' secrets-store/aws.properties >> $GITHUB_ENV
           echo "Secrets loaded"
 
       - name: Load SSH key
