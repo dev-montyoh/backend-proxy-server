@@ -13,8 +13,15 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
+      - name: Check out Secrets store
+        uses: actions/checkout@v5
+        with:
+          repository: 'dev-montyoh/secrets-store'
+          token: ${{ inputs.SECRETS_STORE_ACCESS_TOKEN }}
+          path: secrets-store
+
       - name: Load secrets
-        uses: dev-montyoh/secrets-store/.github/actions/load-secrets
+        uses: ./secrets-store/.github/actions/load-secrets
         with:
           SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
 
