@@ -33,11 +33,10 @@ jobs:
           echo "Secrets loaded"
 
       - name: Load SSH key
-        id: ssh_key
         run: |
-          SSH_KEY_CONTENT=$(cat secrets-store/ec2-ssh-key)
+          SSH_KEY_CONTENT=$(cat secrets-store/id_rsa)
           echo "EC2_SSH_KEY<<EOF" >> $GITHUB_ENV
-          echo "EC2_SSH_KEY" >> $GITHUB_ENV
+          echo "$SSH_KEY_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       # SSH 연결
@@ -49,7 +48,7 @@ jobs:
         with:
           host: ${{ env.EC2_PUBLIC_IP }}
           username: ec2-user
-          key: ${{ env.EC2_SSH_KEY }}
+          key: ${{ env.SSH_KEY_CONTENT }}
           envs: DOCKER_REGISTRY_ACCESS_TOKEN,DOCKER_REGISTRY_USERNAME
           script: |
             # 기존 서비스 및 이미지 삭제
