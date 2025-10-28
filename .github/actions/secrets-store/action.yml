@@ -1,0 +1,34 @@
+inputs:
+  SECRETS_STORE_ACCESS_TOKEN:
+    description: 'SECRETS_STORE_ACCESS_TOKEN'
+    required: true
+
+name: Load Secrets
+description: 시크릿 값 + SSH 키 로드
+runs:
+  using: "composite"
+  steps:
+    # 시크릿 스토어 체크아웃
+    - name: Check out Secrets store
+      uses: actions/checkout@v5
+      with:
+        repository: 'dev-montyoh/secrets-store'
+        token: ${{ inputs.SECRETS_STORE_ACCESS_TOKEN }}
+        path: secrets-store
+
+    # 시크릿 값들 로드
+    - name: Load properties
+      run: |
+        grep -v '^#' secrets-store/github.properties >> $GITHUB_ENV
+        grep -v '^#' secrets-store/aws.properties >> $GITHUB_ENV
+        echo "Secrets loaded"
+      shell: bash
+
+    # SSH 키 로드
+    - name: Load SSH key
+      run: |
+        SSH_KEY_CONTENT=$(cat secrets-store/ec2-ssh-key)
+        echo "EC2_SSH_KEY<<EOF" >> $GITHUB_ENV
+        echo "$SSH_KEY_CONTENT" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
+      shell: bash

@@ -13,27 +13,11 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
-      # 시크릿 스토어 체크아웃
-      - name: Check out Secrets store
-        uses: actions/checkout@v5
+      # Secret Store
+      - name: Load secret Store
+        uses: ./.github/actions/secrets-store
         with:
-          repository: 'dev-montyoh/secrets-store'
-          token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
-          path: secrets-store
-
-      # 시크릿 값들 로드
-      - name: Load secrets
-        run: |
-          grep -v '^#' secrets-store/github.properties >> $GITHUB_ENV
-          grep -v '^#' secrets-store/aws.properties >> $GITHUB_ENV
-          echo "Secrets loaded"
-
-      - name: Load SSH key
-        run: |
-          SSH_KEY_CONTENT=$(cat secrets-store/ec2-ssh-key)
-          echo "EC2_SSH_KEY<<EOF" >> $GITHUB_ENV
-          echo "$SSH_KEY_CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          SECRETS_STORE_ACCESS_TOKEN: ${{secrets.SECRETS_STORE_ACCESS_TOKEN}}
 
       # SSH 연결
       - name: Set up SSH
