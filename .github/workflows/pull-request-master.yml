@@ -19,6 +19,7 @@ jobs:
         with:
           repository: 'dev-montyoh/secrets-store'
           token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
+          path: secrets-store
 
       # 시크릿 값들 로드
       - name: Load secrets
