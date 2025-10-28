@@ -13,13 +13,27 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v5
 
+      # 시크릿 스토어 체크아웃
+      - name: Check out Secrets store
+        uses: actions/checkout@v5
+        with:
+          repository: 'dev-montyoh/secrets-store'
+          token: ${{ secrets.GITHUB_SECRETS_STORE_ACCESS_TOKEN }}
+
+      # 시크릿 값들 로드
+      - name: Load secrets
+        run: |
+          echo "Loading shared secrets..."
+          export $(grep -v '^#' secrets-store/github.properties | xargs)
+          echo "Secrets loaded!"
+
       # Github Registry 로그인
       - name: Log in to Github Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.DOCKER_REGISTRY_ACCESS_TOKEN }}
+          password: ${{ env.DOCKER_REGISTRY_ACCESS_TOKEN }}
 
       # Docker Image Build
       - name: Build Docker Image
