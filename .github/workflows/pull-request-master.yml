@@ -25,7 +25,7 @@ jobs:
       - name: Load secrets
         run: |
           echo "Loading shared secrets..."
-          export $(grep -v '^#' secrets-store/github.properties | xargs)
+          grep -v '^#' secrets-store/github.properties >> $GITHUB_ENV
           echo "Secrets loaded!"
 
       # Github Registry 로그인
