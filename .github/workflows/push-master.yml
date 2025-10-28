@@ -34,7 +34,7 @@ jobs:
 
       - name: Load SSH key
         run: |
-          SSH_KEY_CONTENT=$(cat secrets-store/id_rsa)
+          SSH_KEY_CONTENT=$(cat secrets-store/ec2-ssh-key)
           echo "EC2_SSH_KEY<<EOF" >> $GITHUB_ENV
           echo "$SSH_KEY_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
