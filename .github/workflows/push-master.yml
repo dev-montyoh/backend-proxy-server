@@ -36,7 +36,7 @@ jobs:
         with:
           host: ${{ env.EC2_PUBLIC_IP }}
           username: ec2-user
-          key: ${{ env.EC2_SSH_KEY }}
+          key_path: ./secrets-store/key/ec2-ssh-key
           envs: DOCKER_REGISTRY_ACCESS_TOKEN,DOCKER_REGISTRY_USERNAME
           script: |
             # 기존 서비스 및 이미지 삭제
