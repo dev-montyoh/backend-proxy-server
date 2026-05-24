@@ -1,0 +1,45 @@
+name: Manual Redeploy (master)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Check out Secrets store
+        uses: actions/checkout@v5
+        with:
+          repository: 'dev-montyoh/secrets-store'
+          token: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
+          path: secrets-store
+
+      - name: Load secrets
+        uses: ./secrets-store/.github/actions/load-secrets
+        with:
+          SECRETS_STORE_ACCESS_TOKEN: ${{ secrets.SECRETS_STORE_ACCESS_TOKEN }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1
+        env:
+          DOCKER_REGISTRY_ACCESS_TOKEN: ${{ env.DOCKER_REGISTRY_ACCESS_TOKEN }}
+          DOCKER_REGISTRY_USERNAME: ${{ github.repository_owner }}
+        with:
+          host: ssh.montyoh.dev
+          username: ubuntu
+          key_path: ./secrets-store/key/ec2-ssh-key
+          envs: DOCKER_REGISTRY_ACCESS_TOKEN,DOCKER_REGISTRY_USERNAME
+          script: |
+            docker ps -q --filter "name=backend-proxy-server" | xargs -r docker stop
+            docker ps -a -q --filter "name=backend-proxy-server" | xargs -r docker rm
+            docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
+
+            echo "$DOCKER_REGISTRY_ACCESS_TOKEN" | docker login ghcr.io -u $DOCKER_REGISTRY_USERNAME --password-stdin
+            cd /home/ubuntu/app
+            curl -L -o docker-compose.yml https://raw.githubusercontent.com/$DOCKER_REGISTRY_USERNAME/iac-terraform/refs/heads/master/docker-compose.yml
+            docker-compose pull backend-proxy-server
+            docker-compose up -d backend-proxy-server
