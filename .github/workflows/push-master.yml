@@ -34,8 +34,8 @@ jobs:
           DOCKER_REGISTRY_ACCESS_TOKEN: ${{ env.DOCKER_REGISTRY_ACCESS_TOKEN }}
           DOCKER_REGISTRY_USERNAME: ${{ github.repository_owner }}
         with:
-          host: ${{ env.EC2_PUBLIC_IP }}
-          username: ec2-user
+          host: ssh.montyoh.dev
+          username: ubuntu
           key_path: ./secrets-store/key/ec2-ssh-key
           envs: DOCKER_REGISTRY_ACCESS_TOKEN,DOCKER_REGISTRY_USERNAME
           script: |
@@ -43,10 +43,10 @@ jobs:
             docker ps -q --filter "name=backend-proxy-server" | xargs -r docker stop
             docker ps -a -q --filter "name=backend-proxy-server" | xargs -r docker rm
             docker images -q ghcr.io/$DOCKER_REGISTRY_USERNAME/backend-proxy-server:latest | xargs -r docker rmi -f
-            
+
             # docker-compose.yml 연결 및 특정 서비스 시작
             echo "$DOCKER_REGISTRY_ACCESS_TOKEN" | docker login ghcr.io -u dev-montyoh --password-stdin
-            cd /home/ec2-user/app
+            cd /home/ubuntu/app
             curl -L -o docker-compose.yml https://raw.githubusercontent.com/dev-montyoh/iac-terraform/refs/heads/master/docker-compose.yml
             docker-compose pull backend-proxy-server
             docker-compose up -d backend-proxy-server
