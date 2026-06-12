@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name payment.dev-monty.me;
+    server_name payment.montyoh.dev;
 
     resolver 127.0.0.11 valid=30s;
     proxy_http_version 1.1;
@@ -11,7 +11,8 @@ server {
 
     # Payment Frontend
     location / {
-        proxy_pass http://frontend-payment:8081;
+        set $payment http://frontend-payment:8081;
+        proxy_pass $payment;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
