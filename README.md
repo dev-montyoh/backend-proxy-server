@@ -34,9 +34,10 @@
 
 | 도메인 | 라우팅 대상 |
 |---|---|
-| `www.montyoh.dev` | `frontend-portfolio:8080` (포트폴리오) |
-| `www.montyoh.dev/api` | `backend-api-server-gateway:3000` (API) |
+| `www.montyoh.dev` | `frontend-portfolio:80` (포트폴리오) |
+| `www.montyoh.dev/api` | `backend-api-server-gateway:80` (API) |
 | `xcelerate.montyoh.dev` | `xcelerate-demo:8080` |
+| `plane.montyoh.dev` | `plane-proxy:80` (이슈 트래킹) |
 
 ---
 
