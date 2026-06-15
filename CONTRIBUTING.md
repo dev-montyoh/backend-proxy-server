@@ -32,6 +32,8 @@
 |---|---|
 | `www.conf` | `www.montyoh.dev` 라우팅 설정 |
 | `xcelerate.conf` | `xcelerate.montyoh.dev` 라우팅 설정 |
+| `payment.conf` | `payment.montyoh.dev` 라우팅 설정 |
+| `plane.conf` | `plane.montyoh.dev` → `plane-proxy:80` 라우팅 설정 |
 | `*.conf.disabled` | 비활성화된 설정 |
 
 새 서비스를 추가하려면 `conf.d/` 아래에 `서비스명.conf` 파일을 추가하면 됩니다.
