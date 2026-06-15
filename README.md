@@ -37,7 +37,7 @@
 | `www.montyoh.dev` | `frontend-portfolio:80` (포트폴리오) |
 | `www.montyoh.dev/api` | `backend-api-server-gateway:80` (API) |
 | `xcelerate.montyoh.dev` | `xcelerate-demo:8080` |
-| `plane.montyoh.dev` | `plane-proxy:80` (이슈 트래킹) |
+| `vikunja.montyoh.dev` | `vikunja:3456` (프로젝트 관리) |
 
 ---
 
