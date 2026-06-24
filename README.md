@@ -38,6 +38,7 @@
 | `www.montyoh.dev/api` | `backend-api-server-gateway:80` (API) |
 | `xcelerate.montyoh.dev` | `xcelerate-demo:8080` |
 | `vikunja.montyoh.dev` | `vikunja:3456` (프로젝트 관리) |
+| `affine.montyoh.dev` | `affine:3010` (AFFiNE 워크스페이스) |
 
 ---
 
